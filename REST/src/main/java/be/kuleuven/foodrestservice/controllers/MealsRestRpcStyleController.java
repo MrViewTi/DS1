@@ -44,4 +44,20 @@ public class MealsRestRpcStyleController {
 
         return meal.orElseThrow(() -> new MealNotFoundException("Biggest"));
     }
+
+    @RequestMapping(path = "restrpc/meals/{id}")
+    @ResponseBody
+    void removeMeal(@PathVariable String id) {
+        mealsRepository.delete(id);
+    }
+
+    @PostMapping(path = "restrpc/meals")
+    void addMeal(@RequestBody Meal newMeal) {
+        mealsRepository.add(newMeal);
+    }
+
+    @PutMapping(path = "restrpc/meals/{id}")
+    void addMeal(@PathVariable String id, @RequestBody Meal newMeal) {
+        mealsRepository.update(id, newMeal);
+    }
 }
