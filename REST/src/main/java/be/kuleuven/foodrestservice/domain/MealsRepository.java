@@ -71,16 +71,21 @@ public class MealsRepository {
         return meal;
     }
 
-//    public Optional<Meal> save(Meal newMeal) {
-//        if (newMeal == null) return null;
-//        meals.put(newMeal.getId(), newMeal);
-//        return newMeal;
-//    }
-
     public boolean delete(String id) {
         Assert.notNull(id, "The meal id must not be null");
         meals.remove(id);
         if (findMeal(id) == null) return true;
         return false;
+    }
+
+    public void add(Meal meal) {
+        meal.setId("new id");
+        Assert.notNull(meal.getId(), "The meal id must not be null");
+        meals.put(meal.getId(), meal);
+    }
+
+    public void update(String id, Meal meal) {
+        Assert.notNull(id, "The meal id must not be null");
+        meals.put(id, meal);
     }
 }
