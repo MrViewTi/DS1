@@ -70,4 +70,17 @@ public class MealsRepository {
         Optional<Meal> meal = values.stream().max(Comparator.comparing(Meal::getKcal));
         return meal;
     }
+
+//    public Optional<Meal> save(Meal newMeal) {
+//        if (newMeal == null) return null;
+//        meals.put(newMeal.getId(), newMeal);
+//        return newMeal;
+//    }
+
+    public boolean delete(String id) {
+        Assert.notNull(id, "The meal id must not be null");
+        meals.remove(id);
+        if (findMeal(id) == null) return true;
+        return false;
+    }
 }

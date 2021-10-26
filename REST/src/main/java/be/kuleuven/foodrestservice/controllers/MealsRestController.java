@@ -61,4 +61,32 @@ public class MealsRestController {
 
         return mealToEntityModel("biggest", meal);
     }
+
+    @RequestMapping(path = "rest/meals/{id}")
+    @ResponseBody
+    EntityModel<Meal> removeMeal(@PathVariable String id) {
+        boolean success = mealsRepository.delete(id);
+        Meal meal = mealsRepository.findMeal(id).orElseThrow(() -> new MealNotFoundException("deletion"));
+
+//        if (success == false) {
+//            Meal meal = mealsRepository.findMeal(id).orElseThrow(() -> new MealNotFoundException("deletion"));
+//
+//            return mealToEntityModel("delete", meal);
+//        } else {
+//            return getMeals();
+//        }
+        return mealToEntityModel("delete", meal);
+
+    }
+
+//
+//    @PostMapping(path = "rest/meals/{id}")
+//    EntityModel<Meal> create(@RequestBody Meal newMeal) {
+//        Meal meal = mealsRepository.save(newMeal);
+//        if (meal == null) {
+//            throw new ServerException();
+//        } else {
+//            return mealToEntityModel(meal.Id, meal);
+//        }
+//    }
 }
