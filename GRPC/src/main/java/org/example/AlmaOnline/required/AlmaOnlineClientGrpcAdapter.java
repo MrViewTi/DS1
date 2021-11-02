@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import org.example.AlmaOnline.provided.client.*;
 import org.example.AlmaOnline.server.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // AlmaOnlineClientGrpcAdapter provides your own implementation of the AlmaOnlineClientAdapter

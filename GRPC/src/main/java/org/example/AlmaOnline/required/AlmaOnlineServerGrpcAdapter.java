@@ -5,6 +5,7 @@ import com.google.protobuf.Timestamp;
 import io.grpc.stub.StreamObserver;
 import org.example.AlmaOnline.defaults.Initializer;
 import org.example.AlmaOnline.provided.client.AlmaOnlineClientAdapter;
+import org.example.AlmaOnline.provided.client.RestaurantInfo;
 import org.example.AlmaOnline.provided.server.AlmaOnlineServerAdapter;
 import org.example.AlmaOnline.provided.service.*;
 import org.example.AlmaOnline.server.*;
