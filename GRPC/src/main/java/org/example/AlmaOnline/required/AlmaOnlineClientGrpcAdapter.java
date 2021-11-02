@@ -11,7 +11,12 @@ public class AlmaOnlineClientGrpcAdapter implements AlmaOnlineClientAdapter {
     // getRestaurants should retrieve the information on all the available restaurants.
     @Override
     public List<RestaurantInfo> getRestaurants(AlmaOnlineGrpc.AlmaOnlineBlockingStub stub) {
-        return null;
+        GetRestaurantsResponse list = stub.getRestaurants(GetRestaurantsRequest.newBuilder().build());
+        List<RestaurantInfo> infos = new ArrayList<RestaurantInfo>();
+        for(GetRestaurantResponse response : list.getRestaurantInfoListList()){
+            infos.add(new RestaurantInfo(response.getId(), response.getName()));
+        }
+        return infos;
     }
 
     // getMenu should return the menu of a given restaurant
