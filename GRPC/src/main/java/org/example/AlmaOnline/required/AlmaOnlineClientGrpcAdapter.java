@@ -2,10 +2,13 @@ package org.example.AlmaOnline.required;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import org.example.AlmaOnline.provided.client.*;
+import org.example.AlmaOnline.provided.service.Menu;
 import org.example.AlmaOnline.server.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // AlmaOnlineClientGrpcAdapter provides your own implementation of the AlmaOnlineClientAdapter
 public class AlmaOnlineClientGrpcAdapter implements AlmaOnlineClientAdapter {
@@ -23,7 +26,12 @@ public class AlmaOnlineClientGrpcAdapter implements AlmaOnlineClientAdapter {
     // getMenu should return the menu of a given restaurant
     @Override
     public MenuInfo getMenu(AlmaOnlineGrpc.AlmaOnlineBlockingStub stub, String restaurantId) {
-        return null;
+        GetMenuResponse list = stub.getMenu(GetMenuRequest.newBuilder().setRestaurantId(restaurantId).build());
+        Map<String, Double> items = new HashMap<>();
+        for(GetMenuItem response: list.getRestaurantItemsList()){
+            items.put(response.getItemname(), response.getItemprice());
+        }
+        return new MenuInfo(items);
     }
 
     // createDineInOrder should create the given dine-in order at the AlmaOnline server

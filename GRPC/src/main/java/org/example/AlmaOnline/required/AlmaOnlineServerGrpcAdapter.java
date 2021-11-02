@@ -8,9 +8,11 @@ import org.example.AlmaOnline.provided.client.AlmaOnlineClientAdapter;
 import org.example.AlmaOnline.provided.client.RestaurantInfo;
 import org.example.AlmaOnline.provided.server.AlmaOnlineServerAdapter;
 import org.example.AlmaOnline.provided.service.*;
+import org.example.AlmaOnline.provided.service.Menu;
 import org.example.AlmaOnline.server.*;
 import org.example.AlmaOnline.provided.service.exceptions.OrderException;
 
+import java.awt.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,6 +40,21 @@ public class AlmaOnlineServerGrpcAdapter extends AlmaOnlineGrpc.AlmaOnlineImplBa
             GetRestaurantResponse resp = GetRestaurantResponse.newBuilder().setId(info.getId()).setName(info.getName()).build();
             builder.addRestaurantInfoList(resp);
             i++;
+        }
+        responseObserver.onNext(builder.build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getMenu(GetMenuRequest request, StreamObserver<GetMenuResponse> responseObserver){
+        GetMenuResponse.Builder builder = GetMenuResponse.newBuilder();
+        Optional<Menu> menu = service.getRestaurantMenu(request.getRestaurantId());
+        if(menu.isPresent()){
+            for(Item item : menu.get().getItems()){
+//                MenuItem info = new MenuItem(item.getName(), item.getPrice());
+                GetMenuItem resp = GetMenuItem.newBuilder().setItemname(item.getName()).setItemprice(item.getPrice()).build();
+                builder.addRestaurantItems(resp);
+            }
         }
         responseObserver.onNext(builder.build());
         responseObserver.onCompleted();

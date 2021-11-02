@@ -11,6 +11,7 @@ package almaonline;
 
 service AlmaOnline {
   rpc GetRestaurants(GetRestaurantsRequest) returns (GetRestaurantsResponse) {}
+  rpc GetMenu(GetMenuRequest) returns (GetMenuResponse) {}
 }
 
 message GetRestaurantsRequest {}
@@ -22,4 +23,17 @@ message GetRestaurantResponse {
 
 message GetRestaurantsResponse {
   repeated GetRestaurantResponse restaurantInfoList = 1;
+}
+
+message GetMenuResponse {
+  repeated GetMenuItem restaurantItems = 1;
+}
+
+message GetMenuItem {
+  string itemname = 1;
+  double itemprice = 2;
+}
+
+message GetMenuRequest {
+  string restaurantId = 1;
 }
