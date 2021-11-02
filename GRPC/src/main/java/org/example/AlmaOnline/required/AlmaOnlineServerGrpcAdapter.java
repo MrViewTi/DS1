@@ -27,4 +27,18 @@ public class AlmaOnlineServerGrpcAdapter extends AlmaOnlineGrpc.AlmaOnlineImplBa
     }
 
     // -- Put the code for your implementation down below -- //
+    @Override
+    public void getRestaurants(GetRestaurantsRequest request, StreamObserver<GetRestaurantsResponse> responseObserver){
+
+        GetRestaurantsResponse.Builder builder = GetRestaurantsResponse.newBuilder();
+        int i = 0;
+        for(Restaurant restaurant : service.getRestaurants()){
+            RestaurantInfo info = new RestaurantInfo(restaurant.getId(), restaurant.getName());
+            GetRestaurantResponse resp = GetRestaurantResponse.newBuilder().setId(info.getId()).setName(info.getName()).build();
+            builder.addRestaurantInfoList(resp);
+            i++;
+        }
+        responseObserver.onNext(builder.build());
+        responseObserver.onCompleted();
+    }
 }
