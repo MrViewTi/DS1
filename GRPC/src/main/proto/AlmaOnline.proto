@@ -9,4 +9,17 @@ option objc_class_prefix = "AO";
 
 package almaonline;
 
-service AlmaOnline {}
+service AlmaOnline {
+  rpc GetRestaurants(GetRestaurantsRequest) returns (GetRestaurantsResponse) {}
+}
+
+message GetRestaurantsRequest {}
+
+message GetRestaurantResponse {
+  string id = 1;
+  string name = 2;
+}
+
+message GetRestaurantsResponse {
+  repeated GetRestaurantResponse restaurantInfoList = 1;
+}
