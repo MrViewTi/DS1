@@ -13,6 +13,8 @@ import org.example.AlmaOnline.server.*;
 import org.example.AlmaOnline.provided.service.exceptions.OrderException;
 
 import java.awt.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,6 +59,22 @@ public class AlmaOnlineServerGrpcAdapter extends AlmaOnlineGrpc.AlmaOnlineImplBa
             }
         }
         responseObserver.onNext(builder.build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void createDineInOrder(CreateDineInOrderRequest request, StreamObserver<CreateDineInOrderResponse> responseObserver) {
+        try{
+            Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(request.getCreationDate());
+            Date date2=new SimpleDateFormat("dd/MM/yyyy").parse(request.getReservationDate());
+            service.createDineInOrder(request.getRestaurantId(), new DineInOrderQuote(request.getOrderId(),
+                    date1, request.getCustomer(), request.getItemsList(),date2));
+        }
+        catch (OrderException | ParseException e){
+            System.out.print("order exception generated");
+        }
+        CreateDineInOrderResponse resp = CreateDineInOrderResponse.newBuilder().build();
+        responseObserver.onNext(resp);
         responseObserver.onCompleted();
     }
 }

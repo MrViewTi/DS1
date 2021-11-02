@@ -1,14 +1,13 @@
 package org.example.AlmaOnline.required;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.protobuf.Timestamp;
 import org.example.AlmaOnline.provided.client.*;
 import org.example.AlmaOnline.provided.service.Menu;
 import org.example.AlmaOnline.server.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.Instant;
+import java.util.*;
 
 // AlmaOnlineClientGrpcAdapter provides your own implementation of the AlmaOnlineClientAdapter
 public class AlmaOnlineClientGrpcAdapter implements AlmaOnlineClientAdapter {
@@ -37,7 +36,16 @@ public class AlmaOnlineClientGrpcAdapter implements AlmaOnlineClientAdapter {
     // createDineInOrder should create the given dine-in order at the AlmaOnline server
     @Override
     public ListenableFuture<?> createDineInOrder(AlmaOnlineGrpc.AlmaOnlineFutureStub stub, DineInOrderQuote order) {
-        return null;
+        Instant time = Instant.now();
+        Timestamp timestamp = Timestamp.newBuilder().setSeconds(time.getEpochSecond())
+                .setNanos(time.getNano()).build();
+        ListenableFuture<CreateDineInOrderResponse> list = stub.createDineInOrder(CreateDineInOrderRequest.newBuilder()
+                .setRestaurantId(order.getRestaurantId())
+                .setCustomer(order.getCustomer()).setOrderId(order.getOrderId()).addAllItems(order.getItems()).
+                setReservationDate(String.valueOf(order.getReservationDate())).build());
+
+        return list;
+
     }
 
     // createDeliveryOrder should create the given delivery order at the AlmaOnline server
