@@ -36,13 +36,13 @@ public class AlmaOnlineClientGrpcAdapter implements AlmaOnlineClientAdapter {
     // createDineInOrder should create the given dine-in order at the AlmaOnline server
     @Override
     public ListenableFuture<?> createDineInOrder(AlmaOnlineGrpc.AlmaOnlineFutureStub stub, DineInOrderQuote order) {
-        Instant time = Instant.now();
-        Timestamp timestamp = Timestamp.newBuilder().setSeconds(time.getEpochSecond())
-                .setNanos(time.getNano()).build();
+
+        System.out.print(order.getReservationDate().toString());
+        //assuming reservation date and creation are the same for simplicity
         ListenableFuture<CreateDineInOrderResponse> list = stub.createDineInOrder(CreateDineInOrderRequest.newBuilder()
                 .setRestaurantId(order.getRestaurantId())
                 .setCustomer(order.getCustomer()).setOrderId(order.getOrderId()).addAllItems(order.getItems()).
-                setReservationDate(String.valueOf(order.getReservationDate())).build());
+                setReservationDate(order.getReservationDate().toString()).setCreationDate(order.getReservationDate().toString()).build());
 
         return list;
 

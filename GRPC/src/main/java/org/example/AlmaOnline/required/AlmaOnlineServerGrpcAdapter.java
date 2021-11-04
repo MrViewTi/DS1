@@ -65,13 +65,16 @@ public class AlmaOnlineServerGrpcAdapter extends AlmaOnlineGrpc.AlmaOnlineImplBa
     @Override
     public void createDineInOrder(CreateDineInOrderRequest request, StreamObserver<CreateDineInOrderResponse> responseObserver) {
         try{
-            Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(request.getCreationDate());
-            Date date2=new SimpleDateFormat("dd/MM/yyyy").parse(request.getReservationDate());
+            //https://stackoverflow.com/questions/36309255/parseexception-unparseable-date-wed-mar-30-000000-gmt0530-2016-at-offse  for parsing formula
+            SimpleDateFormat sdf3 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+            Date d1 = sdf3.parse(request.getCreationDate());
+            Date d2 = sdf3.parse(request.getReservationDate());
             service.createDineInOrder(request.getRestaurantId(), new DineInOrderQuote(request.getOrderId(),
-                    date1, request.getCustomer(), request.getItemsList(),date2));
+                    d1, request.getCustomer(), request.getItemsList(),d2));
         }
         catch (OrderException | ParseException e){
             System.out.print("order exception generated");
+            System.out.print(e);
         }
         CreateDineInOrderResponse resp = CreateDineInOrderResponse.newBuilder().build();
         responseObserver.onNext(resp);
