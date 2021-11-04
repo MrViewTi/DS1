@@ -16,6 +16,7 @@ import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 // AlmaOnlineServerGrpcAdapter implements the grpc-server side of the application.
@@ -64,20 +65,27 @@ public class AlmaOnlineServerGrpcAdapter extends AlmaOnlineGrpc.AlmaOnlineImplBa
 
     @Override
     public void createDineInOrder(CreateDineInOrderRequest request, StreamObserver<CreateDineInOrderResponse> responseObserver) {
+
         try{
             //https://stackoverflow.com/questions/36309255/parseexception-unparseable-date-wed-mar-30-000000-gmt0530-2016-at-offse  for parsing formula
             SimpleDateFormat sdf3 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
             Date d1 = sdf3.parse(request.getCreationDate());
             Date d2 = sdf3.parse(request.getReservationDate());
-            service.createDineInOrder(request.getRestaurantId(), new DineInOrderQuote(request.getOrderId(),
-                    d1, request.getCustomer(), request.getItemsList(),d2));
+            DineInOrderQuote dinein = new DineInOrderQuote(request.getOrderId(), new Date(), request.getCustomer(), request.getItemsList(), d2);
+            try{
+                service.createDineInOrder(request.getRestaurantId(), dinein);
+            }
+            catch (OrderException e){
+                System.out.print("order exception generated");
+                System.out.print(e);
+
+            }
         }
-        catch (OrderException | ParseException e){
-            System.out.print("order exception generated");
-            System.out.print(e);
+        catch (ParseException p){
+            System.out.print("parse exception generated");
+            System.out.print(p);
         }
-        CreateDineInOrderResponse resp = CreateDineInOrderResponse.newBuilder().build();
-        responseObserver.onNext(resp);
+        responseObserver.onNext(CreateDineInOrderResponse.newBuilder().build());
         responseObserver.onCompleted();
     }
 }
